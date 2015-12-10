@@ -2,10 +2,11 @@
 
 "use strict";
 
-var fs = require('fs');
+//var fs = require('fs');
 var process = require('process');
 var glob = require('glob');
-var image = require('../src/image');
+//var image = require('../src/image');
+var tp = require('../src/texturepacker');
 var argv = require('yargs')
     .option('space', {
         alias : 'space',
@@ -18,6 +19,18 @@ var argv = require('yargs')
         demand: false,
         describe: 'max',
         type: 'int'
+    })
+    .option('min', {
+        alias : 'min',
+        demand: false,
+        describe: 'min',
+        type: 'int'
+    })
+    .option('POT', {
+        alias : 'POT',
+        demand: false,
+        describe: 'Power of 2',
+        type: 'boolean'
     })
     .usage('Usage: texturepackerjs input-filename')
     .example('texturepackerjs input-filename', 'texturepackerjs input-filename')
@@ -38,14 +51,26 @@ if (basearr == undefined || basearr.length < 1) {
 //    process.exit(1);
 //}
 
-let space = 2;
-if (argv.hasOwnProperty('space')) {
-    space = argv.space;
+let option = {};
+
+option.space = 2;
+if (argv.hasOwnProperty('space') && argv.space != undefined) {
+    option.space = argv.space;
 }
 
-let max = 2048;
-if (argv.hasOwnProperty('max')) {
-    max = argv.max;
+option.max = 2048;
+if (argv.hasOwnProperty('max') && argv.max != undefined) {
+    option.max = argv.max;
+}
+
+option.min = 256;
+if (argv.hasOwnProperty('min') && argv.min != undefined) {
+    option.min = argv.min;
+}
+
+option.POT = true;
+if (argv.hasOwnProperty('POT') && argv.POT != undefined) {
+    option.POT = argv.POT;
 }
 
 let arr = [];
@@ -53,10 +78,15 @@ for (let j = 0; j < basearr.length; ++j) {
     let lstfile = glob.sync(basearr[j]);
     for (var i = 0; i < lstfile.length; ++i) {
         let srcfile = lstfile[i];
-        if (fs.existsSync(srcfile)) {
-            let png = image.load(srcfile);
-            let rect = image.getRealRect(png);
-            console.log(srcfile + ' real rect is ' + JSON.stringify(rect));
-        }
+
+        arr.push(srcfile);
+
+        //if (fs.existsSync(srcfile)) {
+        //    let png = image.load(srcfile);
+        //    let rect = image.getRealRect(png);
+        //    console.log(srcfile + ' real rect is ' + JSON.stringify(rect));
+        //}
     }
 }
+
+tp.texturePacker(arr, option);
