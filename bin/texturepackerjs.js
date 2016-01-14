@@ -2,10 +2,14 @@
 
 "use strict";
 
+require('../src/cmd/path');
+require('../src/cmd/rename');
+
 //var fs = require('fs');
 var process = require('process');
 var glob = require('glob');
 //var image = require('../src/image');
+var basecmd = require('../src/basecmd');
 var tp = require('../src/texturepacker');
 var argv = require('yargs')
     .option('space', {
@@ -39,54 +43,60 @@ var argv = require('yargs')
     .epilog('copyright 2015')
     .argv;
 
-var basearr = argv._;
+basecmd.procCmd(argv);
 
-if (basearr == undefined || basearr.length < 1) {
-    console.log('Usage: texturepackerjs input-filename');
+process.exit(1);
 
-    process.exit(1);
-}
-
-//if (!basecmd.checkParams(argv, 'space')) {
+//var basearr = argv._;
+//
+//if (basearr == undefined || basearr.length < 1) {
+//    console.log('Usage: texturepackerjs input-filename');
+//
 //    process.exit(1);
 //}
-
-let option = {};
-
-option.space = 2;
-if (argv.hasOwnProperty('space') && argv.space != undefined) {
-    option.space = argv.space;
-}
-
-option.max = 2048;
-if (argv.hasOwnProperty('max') && argv.max != undefined) {
-    option.max = argv.max;
-}
-
-option.min = 256;
-if (argv.hasOwnProperty('min') && argv.min != undefined) {
-    option.min = argv.min;
-}
-
-option.POT = true;
-if (argv.hasOwnProperty('POT') && argv.POT != undefined) {
-    option.POT = argv.POT;
-}
-
-let arr = [];
-for (let j = 0; j < basearr.length; ++j) {
-    let lstfile = glob.sync(basearr[j]);
-    for (var i = 0; i < lstfile.length; ++i) {
-        let srcfile = lstfile[i];
-
-        arr.push(srcfile);
-
-        //if (fs.existsSync(srcfile)) {
-        //    let png = image.load(srcfile);
-        //    let rect = image.getRealRect(png);
-        //    console.log(srcfile + ' real rect is ' + JSON.stringify(rect));
-        //}
-    }
-}
-
-tp.texturePacker(arr, option);
+//
+//if (basearr[0])
+//
+////if (!basecmd.checkParams(argv, 'space')) {
+////    process.exit(1);
+////}
+//
+//let option = {};
+//
+//option.space = 2;
+//if (argv.hasOwnProperty('space') && argv.space != undefined) {
+//    option.space = argv.space;
+//}
+//
+//option.max = 2048;
+//if (argv.hasOwnProperty('max') && argv.max != undefined) {
+//    option.max = argv.max;
+//}
+//
+//option.min = 256;
+//if (argv.hasOwnProperty('min') && argv.min != undefined) {
+//    option.min = argv.min;
+//}
+//
+//option.POT = true;
+//if (argv.hasOwnProperty('POT') && argv.POT != undefined) {
+//    option.POT = argv.POT;
+//}
+//
+//let arr = [];
+//for (let j = 0; j < basearr.length; ++j) {
+//    let lstfile = glob.sync(basearr[j]);
+//    for (var i = 0; i < lstfile.length; ++i) {
+//        let srcfile = lstfile[i];
+//
+//        arr.push(srcfile);
+//
+//        //if (fs.existsSync(srcfile)) {
+//        //    let png = image.load(srcfile);
+//        //    let rect = image.getRealRect(png);
+//        //    console.log(srcfile + ' real rect is ' + JSON.stringify(rect));
+//        //}
+//    }
+//}
+//
+//tp.texturePacker(arr, option);
